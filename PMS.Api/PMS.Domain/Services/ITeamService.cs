@@ -9,6 +9,8 @@ namespace PMS.Domain.Services
     {
         int Create(TeamDto teamDto);
 
+        TeamDto Get(int id);
+
         ICollection<TeamDto> GetAll();
 
         void Update(TeamDto teamDto);

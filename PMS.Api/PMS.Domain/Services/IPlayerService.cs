@@ -9,6 +9,8 @@ namespace PMS.Domain.Services
     {
         int Create(PlayerDto playerDto);
 
+        PlayerDto Get(int id);
+
         ICollection<PlayerDto> GetAll();
 
         void Update(PlayerDto playerDto);

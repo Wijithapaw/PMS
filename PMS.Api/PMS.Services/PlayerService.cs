@@ -25,6 +25,11 @@ namespace PMS.Services
             throw new NotImplementedException();
         }
 
+        public PlayerDto Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public ICollection<PlayerDto> GetAll()
         {
             throw new NotImplementedException();

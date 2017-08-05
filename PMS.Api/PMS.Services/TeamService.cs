@@ -26,6 +26,11 @@ namespace PMS.Services
             throw new NotImplementedException();
         }
 
+        public TeamDto Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public ICollection<TeamDto> GetAll()
         {
             throw new NotImplementedException();
