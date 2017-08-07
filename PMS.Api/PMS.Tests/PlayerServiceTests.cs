@@ -22,24 +22,27 @@ namespace PMS.Tests
             [InlineData("KL", "Rahul", "rahul@gmail.com", "India", "1993-12-2")]
             public void WhenPassingCorrectData_CreatesSucessfully(string firstName, string lastName, string email, string homeCountry, DateTime birthday)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var player = CreatePlayerDto(0, firstName, lastName, email, homeCountry, birthday);
+                    SetupTestData(options);
 
-                    var id = service.Create(player);
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
 
-                    Assert.True(id > 0);
+                        var player = CreatePlayerDto(0, firstName, lastName, email, homeCountry, birthday);
 
-                    var newPlayer = service.Get(id);
+                        var id = service.Create(player);
 
-                    string errorMsg = string.Empty;
-                    Assert.True(ValidatePlayer(newPlayer, id, firstName, lastName, email, homeCountry, birthday, ref errorMsg), errorMsg);
+                        Assert.True(id > 0);
+
+                        var newPlayer = service.Get(id);
+
+                        string errorMsg = string.Empty;
+                        Assert.True(ValidatePlayer(newPlayer, id, firstName, lastName, email, homeCountry, birthday, ref errorMsg), errorMsg);
+                    }
                 }
             }
         }
@@ -53,20 +56,22 @@ namespace PMS.Tests
             [InlineData(4)]
             public void WhenPlayerExists_DeleteSuccessfully(int id)
             {
-
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    service.Delete(id);
+                    SetupTestData(options);
 
-                    var deletedPlayer = service.Get(id);
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
 
-                    Assert.Null(deletedPlayer);
+                        service.Delete(id);
+
+                        var deletedPlayer = service.Get(id);
+
+                        Assert.Null(deletedPlayer);
+                    }
                 }
             }
 
@@ -77,15 +82,18 @@ namespace PMS.Tests
             [InlineData(400)]
             public void WhenPlayerNotExists_ThrowsException(int id)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    Assert.Throws<RecordNotFoundException>(() => service.Delete(id));
+                    SetupTestData(options);
+
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
+
+                        Assert.Throws<RecordNotFoundException>(() => service.Delete(id));
+                    }
                 }
             }
         }
@@ -99,17 +107,20 @@ namespace PMS.Tests
             [InlineData(7, "Ben", "Stokes", "ben@gmail.com", "England", "1993-1-2")]
             public void WhenPlayerExists_ReturnPlayer(int id, string firstName, string lastName, string email, string homeCountry, DateTime birthday)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var player = service.Get(id);
-                    string errorMsg = string.Empty;
-                    Assert.True(ValidatePlayer(player, id, firstName, lastName, email, homeCountry, birthday, ref errorMsg), errorMsg);
+                    SetupTestData(options);
+
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
+
+                        var player = service.Get(id);
+                        string errorMsg = string.Empty;
+                        Assert.True(ValidatePlayer(player, id, firstName, lastName, email, homeCountry, birthday, ref errorMsg), errorMsg);
+                    }
                 }
             }
 
@@ -120,17 +131,20 @@ namespace PMS.Tests
             [InlineData(1000)]
             public void WhenPlayerNotExists_ReturnNull(int id)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var player = service.Get(id);
-                   
-                    Assert.Null(player);
+                    SetupTestData(options);
+
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
+
+                        var player = service.Get(id);
+
+                        Assert.Null(player);
+                    }
                 }
             }
         }
@@ -140,32 +154,38 @@ namespace PMS.Tests
             [Fact]
             public void WhenPlayersExist_ReturnsAll()
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var players = service.GetAll();
+                    SetupTestData(options);
 
-                    Assert.Equal(10, players.Count);
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
+
+                        var players = service.GetAll();
+
+                        Assert.Equal(10, players.Count);
+                    }
                 }
             }
 
             [Fact]
             public void WhenPlayersNotExist_ReturnsNon()
             {
-                var options = Helper.GetContextOptions();
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var players = service.GetAll();
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
 
-                    Assert.Equal(0, players.Count);
+                        var players = service.GetAll();
+
+                        Assert.Equal(0, players.Count);
+                    }
                 }
             }
         }
@@ -179,22 +199,25 @@ namespace PMS.Tests
             [InlineData(7, "Benson", "Stokes", "ben@gmail.com", "England", "1992-1-2")]
             public void WhenPlayerExists_UpdatesSuccessfully(int id, string firstName, string lastName, string email, string homeCountry, DateTime birthday)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var player = CreatePlayerDto(id, firstName, lastName, email, homeCountry, birthday);
+                    SetupTestData(options);
 
-                    service.Update(player);
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
 
-                    var updatedPlayer = service.Get(id);
+                        var player = CreatePlayerDto(id, firstName, lastName, email, homeCountry, birthday);
 
-                    string errorMsg = string.Empty;
-                    Assert.True(ValidatePlayer(updatedPlayer, id, firstName, lastName, email, homeCountry, birthday, ref errorMsg), errorMsg);
+                        service.Update(player);
+
+                        var updatedPlayer = service.Get(id);
+
+                        string errorMsg = string.Empty;
+                        Assert.True(ValidatePlayer(updatedPlayer, id, firstName, lastName, email, homeCountry, birthday, ref errorMsg), errorMsg);
+                    }
                 }
             }
 
@@ -205,17 +228,20 @@ namespace PMS.Tests
             [InlineData(70, "Benson", "Stokes", "ben@gmail.com", "England", "1992-1-2")]
             public void WhenPlayerNotExists_ThrowsException(int id, string firstName, string lastName, string email, string homeCountry, DateTime birthday)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var player = CreatePlayerDto(id, firstName, lastName, email, homeCountry, birthday);
+                    SetupTestData(options);
 
-                    Assert.Throws<RecordNotFoundException>(() => service.Update(player));
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerService(context);
+
+                        var player = CreatePlayerDto(id, firstName, lastName, email, homeCountry, birthday);
+
+                        Assert.Throws<RecordNotFoundException>(() => service.Update(player));
+                    }
                 }
             }
         }

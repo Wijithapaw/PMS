@@ -20,29 +20,32 @@ namespace PMS.Tests
             [InlineData("Australia Cricket", "Australia", "1935-7-7")]
             public void WhenPassingCorrectData_CreateSuccessfully(string name, string country, DateTime regDate)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var teamDto = new TeamDto
+                    SetupTestData(options);
+
+                    using (DataContext context = new DataContext(options))
                     {
-                        Name = name,
-                        Country = country,
-                        RegisteredDate = regDate
-                    };
+                        var service = new TeamService(context);
 
-                    var id = service.Create(teamDto);
+                        var teamDto = new TeamDto
+                        {
+                            Name = name,
+                            Country = country,
+                            RegisteredDate = regDate
+                        };
 
-                    var team = service.Get(id);
+                        var id = service.Create(teamDto);
 
-                    Assert.NotNull(team);
-                    Assert.Equal(name, team.Name);
-                    Assert.Equal(country, team.Country);
-                    Assert.Equal(regDate, team.RegisteredDate);
+                        var team = service.Get(id);
+
+                        Assert.NotNull(team);
+                        Assert.Equal(name, team.Name);
+                        Assert.Equal(country, team.Country);
+                        Assert.Equal(regDate, team.RegisteredDate);
+                    }
                 }
             }
         }
@@ -56,19 +59,24 @@ namespace PMS.Tests
             [InlineData(4)]
             public void WhenTeamExists_DeleteSuccessfully(int id)
             {
-                var options = Helper.GetContextOptions();
 
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    service.Delete(id);
 
-                    var deletedPlayer = service.Get(id);
+                    SetupTestData(options);
 
-                    Assert.Null(deletedPlayer);                  
+                    using (DataContext context = new DataContext(options))
+                    {
+                        var service = new TeamService(context);
+
+                        service.Delete(id);
+
+                        var deletedPlayer = service.Get(id);
+
+                        Assert.Null(deletedPlayer);
+                    }
                 }
             }
 
@@ -80,15 +88,19 @@ namespace PMS.Tests
             [InlineData(14)]
             public void WhenTeamNotExists_ThrowsException(int id)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    Assert.Throws<RecordNotFoundException>(() => service.Delete(id));
+
+                    SetupTestData(options);
+
+                    using (DataContext context = new DataContext(options))
+                    {
+                        var service = new TeamService(context);
+
+                        Assert.Throws<RecordNotFoundException>(() => service.Delete(id));
+                    }
                 }
             }
         }
@@ -102,21 +114,25 @@ namespace PMS.Tests
             [InlineData(5, "Surrey", "England", "1955-12-1")]
             public void WhenTeamExists_ReturnTeam(int id, string name, string country, DateTime regDate)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var team = service.Get(id);
 
-                    Assert.NotNull(team);
-                    Assert.Equal(name, team.Name);
-                    Assert.Equal(country, team.Country);
-                    Assert.Equal(regDate, team.RegisteredDate);
-                }                    
+                    SetupTestData(options);
+
+                    using (DataContext context = new DataContext(options))
+                    {
+                        var service = new TeamService(context);
+
+                        var team = service.Get(id);
+
+                        Assert.NotNull(team);
+                        Assert.Equal(name, team.Name);
+                        Assert.Equal(country, team.Country);
+                        Assert.Equal(regDate, team.RegisteredDate);
+                    }
+                }
             }
 
             [Theory]
@@ -125,17 +141,20 @@ namespace PMS.Tests
             [InlineData(12)]
             public void WhenTeamNotExists_ReturnNull(int id)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var team = service.Get(id);
+                    SetupTestData(options);
 
-                    Assert.Null(team);                   
+                    using (DataContext context = new DataContext(options))
+                    {
+                        var service = new TeamService(context);
+
+                        var team = service.Get(id);
+
+                        Assert.Null(team);
+                    }
                 }
             }
         }
@@ -145,32 +164,38 @@ namespace PMS.Tests
             [Fact]
             public void WhenTeamsExists_ReturnAll()
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var teams = service.GetAll();
+                    SetupTestData(options);
 
-                    Assert.Equal(5, teams.Count);
+                    using (DataContext context = new DataContext(options))
+                    {
+                        var service = new TeamService(context);
+
+                        var teams = service.GetAll();
+
+                        Assert.Equal(5, teams.Count);
+                    }
                 }
             }
 
             [Fact]
             public void WhenTeamsNotExists_ReturnAll()
             {
-                var options = Helper.GetContextOptions();
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var teams = service.GetAll();
+                    using (DataContext context = new DataContext(options))
+                    {
+                        var service = new TeamService(context);
 
-                    Assert.Equal(0, teams.Count);
+                        var teams = service.GetAll();
+
+                        Assert.Equal(0, teams.Count);
+                    }
                 }
             }
         }
@@ -183,30 +208,33 @@ namespace PMS.Tests
             [InlineData(2, "India National Cricket", "Republic of India", "1890-11-30")]
             public void WhenTeamExists_UpdateSucessfully(int id, string name, string country, DateTime regDate)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var teamDto = new TeamDto
+                    SetupTestData(options);
+
+                    using (DataContext context = new DataContext(options))
                     {
-                        Id = id,
-                        Name = name,
-                        Country = country,
-                        RegisteredDate = regDate
-                    };
+                        var service = new TeamService(context);
 
-                    service.Update(teamDto);
+                        var teamDto = new TeamDto
+                        {
+                            Id = id,
+                            Name = name,
+                            Country = country,
+                            RegisteredDate = regDate
+                        };
 
-                    var team = service.Get(id);
+                        service.Update(teamDto);
 
-                    Assert.NotNull(team);
-                    Assert.Equal(name, team.Name);
-                    Assert.Equal(country, team.Country);
-                    Assert.Equal(regDate, team.RegisteredDate);
+                        var team = service.Get(id);
+
+                        Assert.NotNull(team);
+                        Assert.Equal(name, team.Name);
+                        Assert.Equal(country, team.Country);
+                        Assert.Equal(regDate, team.RegisteredDate);
+                    }
                 }
             }
 
@@ -217,23 +245,26 @@ namespace PMS.Tests
             [InlineData(12, "India National Cricket", "Republic of India", "1890-11-30")]
             public void WhenTeamNotExists_ThrowsException(int id, string name, string country, DateTime regDate)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (DataContext context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new TeamService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var teamDto = new TeamDto
+                    SetupTestData(options);
+
+                    using (DataContext context = new DataContext(options))
                     {
-                        Id = id,
-                        Name = name,
-                        Country = country,
-                        RegisteredDate = regDate
-                    };
+                        var service = new TeamService(context);
 
-                    Assert.Throws<RecordNotFoundException>(() => service.Update(teamDto));                  
+                        var teamDto = new TeamDto
+                        {
+                            Id = id,
+                            Name = name,
+                            Country = country,
+                            RegisteredDate = regDate
+                        };
+
+                        Assert.Throws<RecordNotFoundException>(() => service.Update(teamDto));
+                    }
                 }
             }
         }

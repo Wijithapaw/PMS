@@ -21,34 +21,42 @@ namespace PMS.Tests
             [InlineData(2, "2010-8-1", 2)]
             public void WhenPlayersExists_ReturnsOnlyValidPlayers(int teamId, DateTime date, int expectedCount)
             {
-                var options = Helper.GetContextOptions();
-
-                SetupTestData(options);
-
-                using (var context = new DataContext(options))
+                using (var connection = Helper.GetSqliteConnection())
                 {
-                    var service = new PlayerManagerService(context);
+                    var options = Helper.GetSqliteContextOptions(connection);
 
-                    var players = service.GetTeamPlayersForTheDate(teamId, date);
+                    SetupTestData(options);
 
-                    Assert.Equal(expectedCount, players.Count);
+                    using (var context = new DataContext(options))
+                    {
+                        var service = new PlayerManagerService(context);
+
+                        var players = service.GetTeamPlayersForTheDate(teamId, date);
+
+                        Assert.Equal(expectedCount, players.Count);
+                    }
                 }
             }
         }
 
-        public static void SetupTestData(DbContextOptions<DataContext> options)
+        #region Helper Methods
+
+        private static void SetupTestData(DbContextOptions<DataContext> options)
         {
             using (var context = new DataContext(options))
             {
                 context.Teams.AddRange(TeamServiceTests.GetTeams());
                 context.Players.AddRange(PlayerServiceTests.GetPlayers());
+
+                context.SaveChanges();
+
                 context.PlayerTeams.AddRange(GetPlayerTeams());
 
                 context.SaveChanges();
             }  
         }
 
-        private static PlayerTeam[] GetPlayerTeams()
+        public static PlayerTeam[] GetPlayerTeams()
         {
             var playerTeams = new PlayerTeam[]
                 {
@@ -82,6 +90,8 @@ namespace PMS.Tests
 
             return player;
         }
-    
+
+        #endregion
+
     }
 }
