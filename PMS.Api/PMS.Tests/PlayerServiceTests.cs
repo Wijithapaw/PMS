@@ -231,7 +231,7 @@ namespace PMS.Tests
             }
         }
 
-        private static Player[] GetPlayers()
+        public static Player[] GetPlayers()
         {
             var players = new Player[]
                 {

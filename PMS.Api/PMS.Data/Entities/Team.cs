@@ -20,6 +20,6 @@ namespace PMS.Data.Entities
         [Required]
         public DateTime RegisteredDate { get; set; }
 
-        public PlayerTeam[] Players { get; set; }
+        public ICollection<PlayerTeam> Players { get; set; }
     }
 }
