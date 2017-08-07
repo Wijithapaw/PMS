@@ -5,13 +5,15 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMS.WebApi", "PMS.WebApi\PMS.WebApi.csproj", "{195A00F6-EA64-4ADC-9A67-7DD01AE029F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMS.Domain", "PMS.Domain\PMS.Domain.csproj", "{F474BF9B-FC50-4751-B978-AAEE88580297}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMS.Domain", "PMS.Domain\PMS.Domain.csproj", "{F474BF9B-FC50-4751-B978-AAEE88580297}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMS.Data", "PMS.Data\PMS.Data.csproj", "{572A2503-EE59-4A56-B74A-2FFDB7646CD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMS.Data", "PMS.Data\PMS.Data.csproj", "{572A2503-EE59-4A56-B74A-2FFDB7646CD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMS.Services", "PMS.Services\PMS.Services.csproj", "{B87C8964-42AB-4BB6-BA89-4ACC03EFCA78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMS.Services", "PMS.Services\PMS.Services.csproj", "{B87C8964-42AB-4BB6-BA89-4ACC03EFCA78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMS.Utills", "PMS.Utills\PMS.Utills.csproj", "{42154AD1-35F9-4994-946D-66CAF899EC9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMS.Utills", "PMS.Utills\PMS.Utills.csproj", "{42154AD1-35F9-4994-946D-66CAF899EC9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMS.Tests", "PMS.Tests\PMS.Tests.csproj", "{6573364E-BD14-4AA5-BFB2-E22752EDF3DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{42154AD1-35F9-4994-946D-66CAF899EC9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42154AD1-35F9-4994-946D-66CAF899EC9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42154AD1-35F9-4994-946D-66CAF899EC9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6573364E-BD14-4AA5-BFB2-E22752EDF3DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6573364E-BD14-4AA5-BFB2-E22752EDF3DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6573364E-BD14-4AA5-BFB2-E22752EDF3DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6573364E-BD14-4AA5-BFB2-E22752EDF3DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

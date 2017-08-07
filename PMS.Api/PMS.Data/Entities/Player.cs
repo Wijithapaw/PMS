@@ -19,6 +19,7 @@ namespace PMS.Data.Entities
 
         [Required]
         [MaxLength(200)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]

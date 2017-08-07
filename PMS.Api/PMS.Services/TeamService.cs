@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using PMS.Domain.Dtos.Team;
 using PMS.Data;
+using System.Linq;
+using PMS.Data.Entities;
+using PMS.Utills.PMSExceptions;
 
 namespace PMS.Services
 {
@@ -18,27 +21,70 @@ namespace PMS.Services
 
         public int Create(TeamDto teamDto)
         {
-            throw new NotImplementedException();
+            var team = new Team
+            {
+                Name = teamDto.Name,
+                Country = teamDto.Country,
+                RegisteredDate = teamDto.RegisteredDate
+            };
+
+            _dataContext.Teams.Add(team);
+            _dataContext.SaveChanges();
+
+            return team.Id;
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var team = _dataContext.Teams.Find(id);
+
+            if (team == null)
+                throw new RecordNotFoundException("Team", id);
+
+            _dataContext.Teams.Remove(team);
+            _dataContext.SaveChanges();
         }
 
         public TeamDto Get(int id)
         {
-            throw new NotImplementedException();
+            var team = _dataContext.Teams.Where(t => t.Id == id)
+                        .Select(t => new TeamDto
+                        {
+                            Id = t.Id,
+                            Name = t.Name,
+                            Country = t.Country,
+                            RegisteredDate = t.RegisteredDate
+                        }).FirstOrDefault();
+
+            return team;
         }
 
         public ICollection<TeamDto> GetAll()
         {
-            throw new NotImplementedException();
+            var teams = _dataContext.Teams
+                         .Select(t => new TeamDto
+                         {
+                             Id = t.Id,
+                             Name = t.Name,
+                             Country = t.Country,
+                             RegisteredDate = t.RegisteredDate
+                         }).ToArray();
+
+            return teams;
         }
 
         public void Update(TeamDto teamDto)
         {
-            throw new NotImplementedException();
+            var team = _dataContext.Teams.Find(teamDto.Id);
+
+            if (team == null)
+                throw new RecordNotFoundException("Team", teamDto.Id);
+
+            team.Name = teamDto.Name;
+            team.Country = teamDto.Country;
+            team.RegisteredDate = teamDto.RegisteredDate;
+
+            _dataContext.SaveChanges();
         }
     }
 }
