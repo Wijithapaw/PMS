@@ -28,6 +28,6 @@ namespace PMS.Data.Entities
         [Required]
         public DateTime Birthday { get; set; }
 
-        public PlayerTeam[] Teams { get; set; }
+        public ICollection<PlayerTeam> Teams { get; set; }
     }
 }
