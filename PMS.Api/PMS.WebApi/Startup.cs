@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PMS.WebApi.ErrorHandling;
 
 namespace PMS.WebApi
 {
@@ -36,6 +37,9 @@ namespace PMS.WebApi
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ErrorLoggingMiddleware>();
 
             app.UseMvc();
         }
